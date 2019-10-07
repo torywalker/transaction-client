@@ -1,0 +1,8 @@
+- [ ] Update index.js to do something
+- [ ] Convert to TypeScript
+- [ ] Figure out how to do Types properly for packages
+- [ ] Create PR with changes
+- [ ] Create package.json
+- [ ] Figure out if we are allowed to do this??
+- [ ] Make repo public
+- [ ] Put on npm registry
