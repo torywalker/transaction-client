@@ -6,7 +6,7 @@
 - [ ] Figure out how to do Types properly for packages
 - [x] Run tests and fix them
 - [x] Create package.json (with dependencies)
-- [x] Add example to README.md
+- [ ] Add example to README.md
 - [ ] Fix all the TODO: comments
 - [ ] Add generics to functions + remove types.ts?
 - [ ] Add getters instead of functions
