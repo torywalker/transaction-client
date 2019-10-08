@@ -1,8 +1,13 @@
+- [ ] Add a .gitignore
 - [ ] Update index.js to do something
-- [ ] Convert to TypeScript
+- [x] Convert to TypeScript
 - [ ] Figure out how to do Types properly for packages
 - [ ] Create PR with changes
-- [ ] Create package.json
+- [x] Run tests and fix them
+- [x] Create package.json (with dependencies)
+- [x] Add example to README.md
+- [ ] Add generics to functions + remove types.ts?
+- [ ] Add getters instead of functions
 - [ ] Figure out if we are allowed to do this??
 - [ ] Make repo public
 - [ ] Put on npm registry

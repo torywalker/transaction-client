@@ -1,6 +1,17 @@
-const Step = require('./steps/step');
+import Step from "./step";
 
-module.exports = class TransactionClient {
+export type ClientResult = {
+  rolledBack: boolean;
+  rollbackErrors?: Error[];
+  rollbackSteps?: string[];
+  rollbackInitiator?: string;
+  [key: string]: any;
+};
+
+export default class TransactionClient {
+  private steps: Step[];
+  private completedSteps: Step[];
+
   /**
    * Create a transaction client
    */
@@ -12,26 +23,29 @@ module.exports = class TransactionClient {
   /**
    * Roll back all steps that have already been committed
    * @param {object} data - All step data accumulated up to this point
-   * @param {string} error - Optional error message
+   * @param {Error} error - Optional error message
    * @returns {object} { errors, steps } errors encountered and steps executed during rollback
    */
-  async _rollback(data, error) {
-    if (this.completedSteps.length) {
-      const rollbackErrors = [];
-      const rollbackSteps = [];
+  async _rollback(
+    data: {},
+    error: Error | string
+  ): Promise<{ rollbackErrors: Error[]; rollbackSteps: string[] }> {
+    const rollbackErrors: Error[] = [];
+    const rollbackSteps: string[] = [];
 
+    if (this.completedSteps.length) {
       // Execute each rollback step in order
       for (const step of this.completedSteps) {
-        rollbackSteps.push(step.getName());
-        await step.rollback(data, error).catch((e) => {
-          rollbackErrors.push(e);
+        rollbackSteps.push(step.name);
+        await step.rollback(data, error).catch(e => {
+          const rollbackError =
+            e instanceof Error ? e : new Error(e || "Undefined Error");
+          rollbackErrors.push(rollbackError);
         });
       }
-
-      return { rollbackErrors, rollbackSteps };
     }
 
-    return {};
+    return { rollbackErrors, rollbackSteps };
   }
 
   /**
@@ -40,21 +54,26 @@ module.exports = class TransactionClient {
    * @param {boolean} configuration.checkErrors - Handle error checking within this method by throwing Error
    * @returns {object} Contains accumulated data from steps and rollback info
    */
-  async start(configuration = {}) {
-    const { checkErrors = false } = configuration;
-    let rollbackErrors = [];
-    let rollbackSteps = [];
-    let rollbackInitiator;
-    let accumulator = {};
+  async start(configuration = { checkErrors: false }): Promise<ClientResult> {
+    const { checkErrors } = configuration;
+    let rollbackErrors: Error[] = [];
+    let rollbackSteps: string[] = [];
+    let rollbackInitiator = "";
+    let accumulator: ClientResult = {
+      rolledBack: false
+    };
 
     for (const step of this.steps) {
       // Add completed step to list so we can rollback if needed
       this.completedSteps.unshift(step);
 
       // Set error if we fail to execute rollback on step failure
-      const stepData = await step.start(accumulator).catch(async (e) => {
-        rollbackInitiator = step.getName();
-        ({ rollbackErrors, rollbackSteps } = await this._rollback(accumulator, e));
+      const stepData = await step.start(accumulator).catch(async e => {
+        rollbackInitiator = step.name;
+        ({ rollbackErrors, rollbackSteps } = await this._rollback(
+          accumulator,
+          e
+        ));
       });
 
       // Merge step data with rest of data (flat structure)
@@ -66,7 +85,8 @@ module.exports = class TransactionClient {
         accumulator.rollbackSteps = rollbackSteps;
 
         if (rollbackErrors.length) accumulator.rollbackErrors = rollbackErrors;
-        if (rollbackInitiator) accumulator.rollbackInitiator = rollbackInitiator;
+        if (rollbackInitiator)
+          accumulator.rollbackInitiator = rollbackInitiator;
 
         break; // Stop execution of steps
       }
@@ -74,7 +94,7 @@ module.exports = class TransactionClient {
 
     if (checkErrors && accumulator.rolledBack) {
       throw new Error(
-        `The following steps were rolled back: [${accumulator.rollbackSteps}]. Rollback was initiated by: ${accumulator.rollbackInitiator}`,
+        `The following steps were rolled back: [${accumulator.rollbackSteps}]. Rollback was initiated by: ${accumulator.rollbackInitiator}`
       );
     }
 
@@ -86,9 +106,9 @@ module.exports = class TransactionClient {
    * @param {Step} step - An instance of a step
    * @returns {TransactionClient} To make the method chainable
    */
-  addStep(step) {
+  addStep(step: Step): this {
     if (!(step instanceof Step)) {
-      throw new Error('Only objects of type Step can be added to the client');
+      throw new Error("Only objects of type Step can be added to the client");
     }
     this.steps.push(step);
     return this;
@@ -99,7 +119,7 @@ module.exports = class TransactionClient {
    * @param {Step} instance of a step
    * @returns {array} All of the steps that will be ran at start time
    */
-  getSteps() {
+  getSteps(): Step[] {
     return this.steps;
   }
 
@@ -108,7 +128,7 @@ module.exports = class TransactionClient {
    * @param {Step} instance of a step
    * @returns {array} All of the steps that have been ran
    */
-  getCompletedSteps() {
+  getCompletedSteps(): Step[] {
     return this.completedSteps;
   }
-};
+}
