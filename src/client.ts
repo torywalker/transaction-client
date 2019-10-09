@@ -8,7 +8,7 @@ export type ClientResult = {
   [key: string]: any;
 };
 
-export default class TransactionClient {
+export default class Client {
   private _steps: Step[];
   private _completedSteps: Step[];
 
@@ -104,7 +104,7 @@ export default class TransactionClient {
   /**
    * Add a step to the collection of steps to run
    * @param {Step} step - An instance of a step
-   * @returns {TransactionClient} To make the method chainable
+   * @returns {Client} To make the method chainable
    */
   addStep(step: Step): this {
     if (!(step instanceof Step)) {

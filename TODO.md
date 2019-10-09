@@ -6,10 +6,10 @@
 - [x] Figure out how to do Types properly for packages
 - [x] Run tests and fix them
 - [x] Create package.json (with dependencies)
-- [ ] Add example to README.md
+- [x] Add example to README.md
 - [x] Fix all the TODO: comments
 - [ ] Fix linter (add packages needed)
-- [ ] Test with example code
+- [ ] Test example from README.md
 - [ ] Update files with prettier changes (single quotes, etc.)
 - [ ] Add generics to functions + remove types.ts?
 - [ ] Add getters instead of functions

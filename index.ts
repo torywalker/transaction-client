@@ -1,10 +1,10 @@
-import _Client from "./src/client";
-import _Step from "./src/step";
+import Client from "./src/client";
+import Step from "./src/step";
 
-export const Client = _Client;
-export const Step = _Step;
+export const TransactionClient = Client;
+export const TransactionStep = Step;
 
 export default {
-  Client: _Client,
-  Step: _Step
+  TransactionClient: Client,
+  TransactionStep: Step
 };
