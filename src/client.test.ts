@@ -25,7 +25,7 @@ describe("#addStep()", () => {
   it("should add to internal array when new step is added", () => {
     client.addStep(passingStep);
     client.addStep(passingStep);
-    const currentSteps = client.getSteps();
+    const currentSteps = client.steps;
 
     expect(Array.isArray(currentSteps)).toBeTruthy();
     expect(currentSteps.length).toBe(2);
@@ -41,7 +41,7 @@ describe("#getSteps()", () => {
   it("should return all steps", () => {
     const expectedResult = [passingStep];
     client.addStep(passingStep);
-    const steps = client.getSteps();
+    const steps = client.steps;
     expect(steps).toEqual(expectedResult);
   });
 });
@@ -52,14 +52,14 @@ describe("#getCompletedSteps()", () => {
     client.addStep(passingStep);
     await client.start().catch(/* throwaway error */);
 
-    const steps = client.getCompletedSteps();
+    const steps = client.completedSteps;
     expect(steps).toEqual(expectedResult);
   });
 });
 
 describe("#_rollback()", () => {
   it("should call each step rollback function", async () => {
-    (client as any).completedSteps = [failingStep];
+    (client as any)._completedSteps = [failingStep];
     await (client as any)._rollback();
 
     expect(errorFunction).toHaveBeenCalledTimes(1);
@@ -88,7 +88,6 @@ describe("#start()", () => {
 
     await client.start();
 
-    // TODO: ensure these have been called in order (.toHaveBeenCalledBefore doesn't work yet)
     expect(spyFn1).toHaveBeenCalledTimes(1);
     expect(spyFn2).toHaveBeenCalledTimes(1);
   });
@@ -102,7 +101,6 @@ describe("#start()", () => {
 
     await client.start().catch(/* throwaway error */);
 
-    // TODO: ensure these have been called in order (.toHaveBeenCalledBefore doesn't work yet)
     expect(spyFn1).toHaveBeenCalledTimes(1);
     expect(spyFn2).toHaveBeenCalledTimes(1);
   });

@@ -82,7 +82,7 @@ export default class Step {
    * Get fnToExecute that was provided in constructor
    * @returns {Function} this._fnToExecute
    */
-  getStartFunction(): Function {
+  get startFunction(): Function {
     return this._fnToExecute;
   }
 
@@ -90,7 +90,7 @@ export default class Step {
    * Get fnToRollback that was provided in constructor
    * @returns {Function} this._fnToRollback
    */
-  getRollbackFunction(): Function {
+  get rollbackFunction(): Function {
     return this._fnToRollback;
   }
 
@@ -98,7 +98,7 @@ export default class Step {
    * Get data returned from executing the start function
    * @returns {Object} this.output
    */
-  getOutput(): {} {
+  get output(): {} {
     return this._output;
   }
 
@@ -106,7 +106,7 @@ export default class Step {
    * Get data returned from executing the rollback function
    * @returns {Object} this.rollbackOutput
    */
-  getRollbackOutput(): {} {
+  get rollbackOutput(): {} {
     return this._rollbackOutput;
   }
 }

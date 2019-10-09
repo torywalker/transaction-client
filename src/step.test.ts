@@ -89,14 +89,14 @@ describe("#rollback()", () => {
 describe("#getStartFunction()", () => {
   it("should return the provided start function", () => {
     const step = new Step(testName, successFn, errorFn);
-    expect(step.getStartFunction()).toEqual(successFn);
+    expect(step.startFunction).toEqual(successFn);
   });
 });
 
 describe("#getRollbackFunction()", () => {
   it("should return the provided rollback function", () => {
     const step = new Step(testName, successFn, errorFn);
-    expect(step.getRollbackFunction()).toEqual(errorFn);
+    expect(step.rollbackFunction).toEqual(errorFn);
   });
 });
 
@@ -105,7 +105,7 @@ describe("#getOutput()", () => {
     const step = new Step(testName, successFn, successFn);
     const output = await step.start();
     expect(output).toEqual(testOutput);
-    expect(output).toEqual(step.getOutput());
+    expect(output).toEqual(step.output);
   });
 });
 
@@ -114,6 +114,6 @@ describe("#getRollbackFunction()", () => {
     const step = new Step(testName, successFn, successFn);
     const output = await step.rollback();
     expect(output).toEqual(testOutput);
-    expect(output).toEqual(step.getRollbackOutput());
+    expect(output).toEqual(step.rollbackOutput);
   });
 });

@@ -25,9 +25,16 @@ export const validateProperty = <T>(
   return property;
 };
 
+/**
+ * Retrieve error message from Error, or use message from string
+ * @param {Error} err
+ */
 export const getErrorMsg = (err?: Error | string) =>
   err instanceof Error ? err.message : err;
 
+/**
+ * Logger to indicate errors in a consistent format
+ */
 export const log = (() => {
   const formatOut = new Bformat({
     outputMode: "json",

@@ -1,13 +1,16 @@
 ### Code Changes
 
-- [ ] Add a .gitignore
-- [ ] Update index.js to do something
+- [x] Add a .gitignore
+- [x] Update index.js to do something
 - [x] Convert to TypeScript
-- [ ] Figure out how to do Types properly for packages
+- [x] Figure out how to do Types properly for packages
 - [x] Run tests and fix them
 - [x] Create package.json (with dependencies)
 - [ ] Add example to README.md
-- [ ] Fix all the TODO: comments
+- [x] Fix all the TODO: comments
+- [ ] Fix linter (add packages needed)
+- [ ] Test with example code
+- [ ] Update files with prettier changes (single quotes, etc.)
 - [ ] Add generics to functions + remove types.ts?
 - [ ] Add getters instead of functions
 

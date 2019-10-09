@@ -9,15 +9,15 @@ export type ClientResult = {
 };
 
 export default class TransactionClient {
-  private steps: Step[];
-  private completedSteps: Step[];
+  private _steps: Step[];
+  private _completedSteps: Step[];
 
   /**
    * Create a transaction client
    */
   constructor() {
-    this.steps = [];
-    this.completedSteps = [];
+    this._steps = [];
+    this._completedSteps = [];
   }
 
   /**
@@ -33,9 +33,9 @@ export default class TransactionClient {
     const rollbackErrors: Error[] = [];
     const rollbackSteps: string[] = [];
 
-    if (this.completedSteps.length) {
+    if (this._completedSteps.length) {
       // Execute each rollback step in order
-      for (const step of this.completedSteps) {
+      for (const step of this._completedSteps) {
         rollbackSteps.push(step.name);
         await step.rollback(data, error).catch(e => {
           const rollbackError =
@@ -63,9 +63,9 @@ export default class TransactionClient {
       rolledBack: false
     };
 
-    for (const step of this.steps) {
+    for (const step of this._steps) {
       // Add completed step to list so we can rollback if needed
-      this.completedSteps.unshift(step);
+      this._completedSteps.unshift(step);
 
       // Set error if we fail to execute rollback on step failure
       const stepData = await step.start(accumulator).catch(async e => {
@@ -110,7 +110,7 @@ export default class TransactionClient {
     if (!(step instanceof Step)) {
       throw new Error("Only objects of type Step can be added to the client");
     }
-    this.steps.push(step);
+    this._steps.push(step);
     return this;
   }
 
@@ -119,8 +119,8 @@ export default class TransactionClient {
    * @param {Step} instance of a step
    * @returns {array} All of the steps that will be ran at start time
    */
-  getSteps(): Step[] {
-    return this.steps;
+  get steps(): Step[] {
+    return this._steps;
   }
 
   /**
@@ -128,7 +128,7 @@ export default class TransactionClient {
    * @param {Step} instance of a step
    * @returns {array} All of the steps that have been ran
    */
-  getCompletedSteps(): Step[] {
-    return this.completedSteps;
+  get completedSteps(): Step[] {
+    return this._completedSteps;
   }
 }

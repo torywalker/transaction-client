@@ -1,4 +1,4 @@
-import { validateProperty } from "./helpers";
+import { getErrorMsg, log, validateProperty } from "./helpers";
 
 // Test variable setup
 const testString = "test string";
@@ -29,4 +29,25 @@ describe("#validateProperty()", () => {
   });
 });
 
-// TODO: add log test
+describe("#getErrorMsg()", () => {
+  const errorMessage = "This is an error message";
+  const error = new Error(errorMessage);
+
+  it("should get error message from Error object", () => {
+    const testError = getErrorMsg(error);
+    expect(testError).toEqual(errorMessage);
+  });
+
+  it("should get error message as string", () => {
+    const testError = getErrorMsg(errorMessage);
+    expect(testError).toEqual(errorMessage);
+  });
+});
+
+describe("#log()", () => {
+  it("should generate object with error function", () => {
+    const logger = log;
+    expect(logger).toHaveProperty("error");
+    expect(typeof logger.error === "function").toBe(true);
+  });
+});
