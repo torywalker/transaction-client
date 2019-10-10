@@ -8,11 +8,13 @@
 - [x] Create package.json (with dependencies)
 - [x] Add example to README.md
 - [x] Fix all the TODO: comments
-- [ ] Fix linter (add packages needed)
-- [ ] Test example from README.md
-- [ ] Update files with prettier changes (single quotes, etc.)
+- [x] Fix linter (add packages needed)
+- [x] Test example from README.md
+- [x] Update files with prettier changes (single quotes, etc.)
 - [ ] Add generics to functions + remove types.ts?
-- [ ] Add getters instead of functions
+- [x] Add getters instead of functions
+- [x] Remove node-fetch
+- [x] Remove DELETEME.ts/js
 
 ### Operations
 

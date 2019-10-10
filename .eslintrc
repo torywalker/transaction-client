@@ -31,7 +31,8 @@
     "no-empty-pattern": 1,
     "@typescript-eslint/require-await": 1,
     "@typescript-eslint/unbound-method": 0,
-    "@typescript-eslint/no-use-before-define": 1
+    "@typescript-eslint/no-use-before-define": 1,
+    "require-atomic-updates": 0
   },
   "overrides": []
 }

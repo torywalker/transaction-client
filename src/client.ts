@@ -1,4 +1,4 @@
-import Step from "./step";
+import Step from './step';
 
 export type ClientResult = {
   rolledBack: boolean;
@@ -38,8 +38,7 @@ export default class Client {
       for (const step of this._completedSteps) {
         rollbackSteps.push(step.name);
         await step.rollback(data, error).catch(e => {
-          const rollbackError =
-            e instanceof Error ? e : new Error(e || "Undefined Error");
+          const rollbackError = e instanceof Error ? e : new Error(e || 'Undefined Error');
           rollbackErrors.push(rollbackError);
         });
       }
@@ -58,9 +57,9 @@ export default class Client {
     const { checkErrors } = configuration;
     let rollbackErrors: Error[] = [];
     let rollbackSteps: string[] = [];
-    let rollbackInitiator = "";
+    let rollbackInitiator = '';
     let accumulator: ClientResult = {
-      rolledBack: false
+      rolledBack: false,
     };
 
     for (const step of this._steps) {
@@ -70,10 +69,7 @@ export default class Client {
       // Set error if we fail to execute rollback on step failure
       const stepData = await step.start(accumulator).catch(async e => {
         rollbackInitiator = step.name;
-        ({ rollbackErrors, rollbackSteps } = await this._rollback(
-          accumulator,
-          e
-        ));
+        ({ rollbackErrors, rollbackSteps } = await this._rollback(accumulator, e));
       });
 
       // Merge step data with rest of data (flat structure)
@@ -85,8 +81,7 @@ export default class Client {
         accumulator.rollbackSteps = rollbackSteps;
 
         if (rollbackErrors.length) accumulator.rollbackErrors = rollbackErrors;
-        if (rollbackInitiator)
-          accumulator.rollbackInitiator = rollbackInitiator;
+        if (rollbackInitiator) accumulator.rollbackInitiator = rollbackInitiator;
 
         break; // Stop execution of steps
       }
@@ -108,7 +103,7 @@ export default class Client {
    */
   addStep(step: Step): this {
     if (!(step instanceof Step)) {
-      throw new Error("Only objects of type Step can be added to the client");
+      throw new Error('Only objects of type Step can be added to the client');
     }
     this._steps.push(step);
     return this;

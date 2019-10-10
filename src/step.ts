@@ -1,4 +1,4 @@
-import { log, validateProperty } from "./helpers";
+import { log, validateProperty } from './helpers';
 
 export default class Step {
   private _name: string;
@@ -13,22 +13,10 @@ export default class Step {
    * @param {Function} fnToExecute - A promise that will execute when the step is started
    * @param {Function} fnToRollback - A promise that will execute when the step is rolled back
    */
-  constructor(
-    name: string,
-    fnToExecute: Function,
-    fnToRollback: Function = async () => {}
-  ) {
-    this._name = validateProperty<string>(name, "name", "string");
-    this._fnToExecute = validateProperty(
-      fnToExecute,
-      "fnToExecute",
-      "function"
-    );
-    this._fnToRollback = validateProperty(
-      fnToRollback,
-      "fnToRollback",
-      "function"
-    );
+  constructor(name: string, fnToExecute: Function, fnToRollback: Function = async () => {}) {
+    this._name = validateProperty<string>(name, 'name', 'string');
+    this._fnToExecute = validateProperty(fnToExecute, 'fnToExecute', 'function');
+    this._fnToRollback = validateProperty(fnToRollback, 'fnToRollback', 'function');
     this._output = {};
     this._rollbackOutput = {};
   }
@@ -42,9 +30,7 @@ export default class Step {
   async start(data?: {}): Promise<{}> {
     this._output = await Promise.resolve(this._fnToExecute(data)).catch(e => {
       log.error(e);
-      throw new Error(
-        `Step ${this._name} failed to execute. Additional Error: ${e}`
-      );
+      throw new Error(`Step ${this._name} failed to execute. Additional Error: ${e}`);
     });
 
     return this._output;
@@ -60,9 +46,7 @@ export default class Step {
   async rollback(data?: {}, error?: Error | string): Promise<{}> {
     error && log.error(error);
 
-    this._rollbackOutput = await Promise.resolve(
-      this._fnToRollback(data, error)
-    ).catch(e => {
+    this._rollbackOutput = await Promise.resolve(this._fnToRollback(data, error)).catch(e => {
       log.error(e);
       throw new Error(`Unable to roll back step ${this._name}. Error: ${e}`);
     });

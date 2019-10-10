@@ -15,23 +15,23 @@ yarn add transaction-client
 ### Example
 
 ```javascript
-import { TransactionClient, TransactionStep } from "transaction-client";
+import { TransactionClient, TransactionStep } from 'transaction-client';
 
 const client = new TransactionClient();
 
-const getFirstTodoItem = new TransactionStep("fetchRoleFromDb", async () => ({
-  todo1: await fetch("https://jsonplaceholder.typicode.com/todos/1")
+const getFirstTodoItem = new TransactionStep('fetchRoleFromDb', async () => ({
+  todo1: await fetch('https://jsonplaceholder.typicode.com/todos/1'),
 }));
 
-const getSecondTodoItem = new TransactionStep("fetchRoleFromDb", async () => ({
-  todo2: await fetch("https://jsonplaceholder.typicode.com/todos/2")
+const getSecondTodoItem = new TransactionStep('fetchRoleFromDb', async () => ({
+  todo2: await fetch('https://jsonplaceholder.typicode.com/todos/2'),
 }));
 
 const data = client
   .addStep(getFirstTodoItem)
   .addStep(getSecondTodoItem)
   .start({ checkErrors: true })
-  .then({ todo1, todo2 } => {
+  .then(({ todo1, todo2 }) => {
     console.log({ todo1, todo2 });
   });
 ```
