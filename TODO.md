@@ -22,3 +22,4 @@
 - [ ] Create PR with changes
 - [ ] Make repo public
 - [ ] Put on npm registry
+- [ ] Add circleCI build on commit to master
