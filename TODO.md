@@ -18,7 +18,7 @@
 
 ### Operations
 
-- [ ] Figure out if we are allowed to do this??
+- [x] Figure out if we are allowed to do this??
 - [ ] Create PR with changes
 - [ ] Make repo public
 - [ ] Put on npm registry

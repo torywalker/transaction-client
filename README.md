@@ -2,7 +2,7 @@
 
 ## Description
 
-A transaction client to ensure all logical steps in an atomic transaction are completed or rolled back
+A transaction client to ensure all logical steps in an atomic transaction are completed or rolled back.
 
 ## Use
 

@@ -12,7 +12,7 @@
   "types": "./lib/main.d.ts",
   "repository": "git@github.com:torywalker/transaction-client.git",
   "author": "Tory <toryjwalker@gmail.com>",
-  "license": "GNU 3",
+  "license": "GNU V3",
   "dependencies": {
     "bunyan": "^1.8.12",
     "bunyan-format": "^0.2.1",
