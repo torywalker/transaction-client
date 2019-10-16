@@ -1,5 +1,5 @@
-const Client = require('./client');
-const Step = require('./steps/step');
+import Client, { ClientResult } from './client';
+import Step from './step';
 
 // Test variable setup
 const errorMessage = 'This is an error';
@@ -9,7 +9,7 @@ const successFunction = jest.fn(() => Promise.resolve(successMessage));
 const stepName = 'testName';
 const passingStep = new Step(stepName, successFunction, successFunction);
 const failingStep = new Step(stepName, errorFunction, errorFunction);
-let client;
+let client: Client;
 
 beforeEach(() => {
   client = new Client();
@@ -17,15 +17,15 @@ beforeEach(() => {
 
 describe('#addStep()', () => {
   it('should throw error if invalid step is added', () => {
-    expect(() => client.addStep('Not a step')).toThrowError(
-      'Only objects of type Step can be added to the client',
+    expect(() => (client as any).addStep('Not a step')).toThrowError(
+      'Only objects of type Step can be added to the client'
     );
   });
 
   it('should add to internal array when new step is added', () => {
     client.addStep(passingStep);
     client.addStep(passingStep);
-    const currentSteps = client.getSteps();
+    const currentSteps = client.steps;
 
     expect(Array.isArray(currentSteps)).toBeTruthy();
     expect(currentSteps.length).toBe(2);
@@ -41,7 +41,7 @@ describe('#getSteps()', () => {
   it('should return all steps', () => {
     const expectedResult = [passingStep];
     client.addStep(passingStep);
-    const steps = client.getSteps();
+    const steps = client.steps;
     expect(steps).toEqual(expectedResult);
   });
 });
@@ -52,15 +52,15 @@ describe('#getCompletedSteps()', () => {
     client.addStep(passingStep);
     await client.start().catch(/* throwaway error */);
 
-    const steps = client.getCompletedSteps();
+    const steps = client.completedSteps;
     expect(steps).toEqual(expectedResult);
   });
 });
 
 describe('#_rollback()', () => {
   it('should call each step rollback function', async () => {
-    client.completedSteps = [failingStep];
-    await client._rollback();
+    (client as any)._completedSteps = [failingStep];
+    await (client as any)._rollback();
 
     expect(errorFunction).toHaveBeenCalledTimes(1);
   });
@@ -68,11 +68,11 @@ describe('#_rollback()', () => {
   it('should error if any rollbacks failed to execute', async () => {
     client.addStep(failingStep);
 
-    await client.start().catch((e) => {
+    await client.start().catch(e => {
       expect(e).toEqual(
         Error(
-          `Unable to rollback all transactions. Transaction rollback failed with the error: Error: Unable to roll back step ${stepName}`,
-        ),
+          `Unable to rollback all transactions. Transaction rollback failed with the error: Error: Unable to roll back step ${stepName}`
+        )
       );
     });
   });
@@ -88,7 +88,6 @@ describe('#start()', () => {
 
     await client.start();
 
-    // TODO: ensure these have been called in order (.toHaveBeenCalledBefore doesn't work yet)
     expect(spyFn1).toHaveBeenCalledTimes(1);
     expect(spyFn2).toHaveBeenCalledTimes(1);
   });
@@ -102,7 +101,6 @@ describe('#start()', () => {
 
     await client.start().catch(/* throwaway error */);
 
-    // TODO: ensure these have been called in order (.toHaveBeenCalledBefore doesn't work yet)
     expect(spyFn1).toHaveBeenCalledTimes(1);
     expect(spyFn2).toHaveBeenCalledTimes(1);
   });
@@ -114,7 +112,7 @@ describe('#start()', () => {
     const fn2 = () => Promise.resolve(fn2data);
     const step1 = new Step(stepName, fn1, successFunction);
     const step2 = new Step(stepName, fn2, successFunction);
-    const expectedOutput = Object.assign({}, fn1data, fn2data);
+    const expectedOutput = Object.assign({ rolledBack: false }, fn1data, fn2data);
 
     const data = await client
       .addStep(step1)
@@ -127,12 +125,16 @@ describe('#start()', () => {
     const fn1data = { test1: 'this is a test' };
     const fn2data = { test2: 'this is also a test' };
     const fn1 = () => Promise.resolve(fn1data);
-    const fn2 = data => Promise.resolve(data.test1 === fn1data.test1 ? fn2data : { nope: 'failure' });
-    const fn3 = data => Promise.resolve(data.test1 === fn1data.test1 && data.test2 === fn2data.test2 ? fn2data : { nope: 'failure' });
+    const fn2 = (data: { [key: string]: any }) =>
+      Promise.resolve(data.test1 === fn1data.test1 ? fn2data : { nope: 'failure' });
+    const fn3 = (data: { [key: string]: any }) =>
+      Promise.resolve(
+        data.test1 === fn1data.test1 && data.test2 === fn2data.test2 ? fn2data : { nope: 'failure' }
+      );
     const step1 = new Step(stepName, fn1, successFunction);
     const step2 = new Step(stepName, fn2, successFunction);
     const step3 = new Step(stepName, fn3, successFunction);
-    const expectedOutput = Object.assign({}, fn1data, fn2data);
+    const expectedOutput = Object.assign({ rolledBack: false }, fn1data, fn2data);
 
     const data = await client
       .addStep(step1)
@@ -143,7 +145,7 @@ describe('#start()', () => {
   });
 
   it('should add rollback data to return on rollback', async () => {
-    const data = await client
+    const data: ClientResult = await client
       .addStep(passingStep)
       .addStep(failingStep)
       .start();
