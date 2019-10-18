@@ -58,4 +58,4 @@ Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for co
 
 ## License
 
-This project is licensed under the GNU 3 License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the GNU GPL 3 License - see the [LICENSE](LICENSE) file for details.
