@@ -2,4 +2,4 @@ lib
 node_modules
 coverage
 
-yar-error.log
+yarn-error.log
