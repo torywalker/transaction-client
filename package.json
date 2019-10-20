@@ -1,6 +1,6 @@
 {
   "name": "transaction-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A transaction client to ensure all logical steps in an atomic transaction are completed or rolled back",
   "scripts": {
     "dev": "tsc-watch --onSuccess \"node ./lib/src/ \" && yarn lint",
